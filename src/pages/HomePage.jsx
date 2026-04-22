@@ -11,6 +11,18 @@ import { productAPI } from "../utils/api";
 import ProductCard from "../components/product/ProductCard";
 import "./HomePage.css";
 
+const toDataUri = (svg) => `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+
+const createCategorySvg = (shape) =>
+  toDataUri(`
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 170">
+      <rect width="240" height="170" rx="22" fill="#fbf6ee"/>
+      <g fill="none" stroke="#c89934" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+        ${shape}
+      </g>
+    </svg>
+  `);
+
 const categories = [
   { label: "Earrings", value: "earrings", icon: "◉", color: "#c9a84c" },
   { label: "Necklaces", value: "necklaces", icon: "◈", color: "#9d62c2" },
@@ -24,6 +36,39 @@ const categories = [
     value: "hair-accessories",
     icon: "✦",
     color: "#9d62c2",
+  },
+];
+
+const categoryCards = [
+  {
+    label: "Bracelets",
+    value: "bracelets",
+    blurb: "Stackable shine for everyday elegance.",
+    image: "/bracelet.jpg",
+  },
+  {
+    label: "Rings",
+    value: "rings",
+    blurb: "Statement pieces with timeless sparkle.",
+    image: "/ring.jpg",
+  },
+  {
+    label: "Necklaces",
+    value: "necklaces",
+    blurb: "Delicate chains that frame every look.",
+    image: "/necklace.jpg",
+  },
+  {
+    label: "Earrings",
+    value: "earrings",
+    blurb: "Light-catching drops for every occasion.",
+    image: "/earring.jpg",
+  },
+  {
+    label: "Pendants",
+    value: "necklaces",
+    blurb: "Refined focal points with luxe detail.",
+    image: "/pendant.jpg",
   },
 ];
 
@@ -174,20 +219,24 @@ export default function HomePage() {
         <div className="section-label">Categories</div>
         <h2 className="section-title">Shop by Category</h2>
         <div className="categories-grid">
-          {categories.map((cat) => (
+          {categoryCards.map((cat) => (
             <Link
               key={cat.value}
               to={`/shop/${cat.value}`}
               className="category-card"
             >
-              <span
-                className="category-icon"
-                style={{ "--cat-color": cat.color }}
-              >
-                {cat.icon}
-              </span>
-              <span className="category-label">{cat.label}</span>
-              <FaArrowRight size={14} className="category-arrow" />
+              <div className="category-image-shell">
+                <img
+                  src={cat.image}
+                  alt={cat.label}
+                  className="category-image"
+                  loading="lazy"
+                />
+              </div>
+              <div className="category-copy">
+                <span className="category-label">{cat.label}</span>
+                <span className="category-blurb">{cat.blurb}</span>
+              </div>
             </Link>
           ))}
         </div>

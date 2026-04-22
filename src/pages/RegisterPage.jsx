@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash, FaUserPlus } from 'react-icons/fa6';
 import { useAuth } from '../context/AuthContext';
+import GoogleAuthSection from '../components/auth/GoogleAuthSection';
 import toast from 'react-hot-toast';
 import './AuthPages.css';
 
@@ -9,7 +10,7 @@ export default function RegisterPage() {
   const [form, setForm] = useState({ firstName: '', lastName: '', email: '', password: '', confirm: '', phone: '' });
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { register } = useAuth();
+  const { register, googleSignIn } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -27,6 +28,19 @@ export default function RegisterPage() {
     }
   };
 
+  const handleGoogleSignIn = async (credential) => {
+    setLoading(true);
+    try {
+      await googleSignIn(credential);
+      navigate('/');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Google sign-in failed');
+      setLoading(false);
+      return;
+    }
+    setLoading(false);
+  };
+
   const set = (k) => (e) => setForm(f => ({ ...f, [k]: e.target.value }));
 
   return (
@@ -42,6 +56,12 @@ export default function RegisterPage() {
         </div>
         <h2 className="auth-title">Create Account</h2>
         <p className="auth-subtitle">Join thousands of satisfied customers</p>
+
+        <GoogleAuthSection
+          mode="signup"
+          loading={loading}
+          onCredential={handleGoogleSignIn}
+        />
 
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-row">

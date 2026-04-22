@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { FaEye, FaEyeSlash, FaRightToBracket } from 'react-icons/fa6';
 import { useAuth } from '../context/AuthContext';
+import GoogleAuthSection from '../components/auth/GoogleAuthSection';
 import toast from 'react-hot-toast';
 import './AuthPages.css';
 
@@ -10,7 +11,7 @@ export function LoginPage() {
   const [form, setForm] = useState({ email: '', password: '' });
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+  const { login, googleSignIn } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
@@ -34,6 +35,19 @@ export function LoginPage() {
     navigate(postLoginPath(), { replace: true });
   };
 
+  const handleGoogleSignIn = async (credential) => {
+    setLoading(true);
+    try {
+      await googleSignIn(credential);
+      navigate(postLoginPath(), { replace: true });
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Google sign-in failed');
+      setLoading(false);
+      return;
+    }
+    setLoading(false);
+  };
+
   return (
     <div className="auth-page">
       <div className="auth-bg">
@@ -47,6 +61,12 @@ export function LoginPage() {
         </div>
         <h2 className="auth-title">Welcome Back</h2>
         <p className="auth-subtitle">Sign in to continue your luxury journey</p>
+
+        <GoogleAuthSection
+          mode="signin"
+          loading={loading}
+          onCredential={handleGoogleSignIn}
+        />
 
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="input-group">

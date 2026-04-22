@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import {
   FaInstagram,
   FaFacebookF,
+  FaTiktok,
   FaXTwitter,
   FaEnvelope,
   FaPhone,
@@ -28,6 +29,7 @@ export default function Footer() {
             <div className="footer-socials">
               <a href="https://instagram.com" target="_blank" rel="noreferrer" className="social-link"><FaInstagram size={18} /></a>
               <a href="https://facebook.com" target="_blank" rel="noreferrer" className="social-link"><FaFacebookF size={18} /></a>
+              <a href="https://tiktok.com" target="_blank" rel="noreferrer" className="social-link"><FaTiktok size={18} /></a>
               <a href="https://twitter.com" target="_blank" rel="noreferrer" className="social-link"><FaXTwitter size={18} /></a>
             </div>
           </div>

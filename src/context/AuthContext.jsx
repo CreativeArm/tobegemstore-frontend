@@ -44,6 +44,15 @@ export const AuthProvider = ({ children }) => {
     return data;
   };
 
+  const googleSignIn = async (credential) => {
+    const { data } = await authAPI.googleAuth(credential);
+    localStorage.setItem('tgToken', data.token);
+    setUser(data.user);
+    setIsAuthenticated(true);
+    toast.success(`Welcome, ${data.user.firstName}!`);
+    return data;
+  };
+
   const logout = () => {
     localStorage.removeItem('tgToken');
     localStorage.removeItem('tgUser');
@@ -55,7 +64,7 @@ export const AuthProvider = ({ children }) => {
   const updateUser = (updatedUser) => setUser(prev => ({ ...prev, ...updatedUser }));
 
   return (
-    <AuthContext.Provider value={{ user, loading, isAuthenticated, login, register, logout, updateUser, loadUser }}>
+    <AuthContext.Provider value={{ user, loading, isAuthenticated, login, register, googleSignIn, logout, updateUser, loadUser }}>
       {children}
     </AuthContext.Provider>
   );
